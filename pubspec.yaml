@@ -79,6 +79,8 @@ flutter:
      - assets/black_logo.png
      - assets/whitee_logo.png
      - assets/lavender.png
+     - assets/bg.png
+     - assets/default profile.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

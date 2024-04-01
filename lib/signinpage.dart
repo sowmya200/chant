@@ -14,17 +14,21 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   late MyAppBar myAppBar;
   @override
-  void initState() {
-    super.initState();
-    // Initialize MyAppBar here
-    myAppBar = const MyAppBar();
-  }
-
   
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-       appBar:const MyAppBar(),
+    return Scaffold(
+       //appBar:const MyAppBar(),
+       body:
+       Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/bg.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: null /* add child content here */,
+      ),
 
     //body:
   );}
