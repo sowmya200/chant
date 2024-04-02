@@ -1,4 +1,5 @@
 import 'package:chant/appbar.dart';
+import 'package:chant/loginpage.dart';
 import 'package:chant/signinpage.dart';
 import 'package:flutter/material.dart';
 import 'package:chant/LoginVerification.dart';
@@ -150,7 +151,7 @@ class _LoginVerificationState extends State<LoginVerification> {
                 // Navigate to signup page
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginVerification()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                   (route) => false, // Remove all routes below the new page
                 );
               },

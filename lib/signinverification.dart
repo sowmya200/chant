@@ -1,7 +1,7 @@
 import 'package:chant/appbar.dart';
 import 'package:chant/signinpage.dart';
 import 'package:flutter/material.dart';
-import 'package:chant/LoginVerification.dart';
+import 'package:chant/addaccountpage.dart';
 
 class SignInVerification extends StatefulWidget {
   const SignInVerification({Key? key}) : super(key: key);
@@ -21,12 +21,12 @@ class _SignInVerificationState extends State<SignInVerification> {
       body:Column(mainAxisAlignment: MainAxisAlignment.center,
            children: <Widget>[
           const Text(
-            "Signin For Account",
+            "Signin For Account                          ",
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
           ),
           SizedBox(
-            height: 8,
+            height: 28,
           ),
            Row(children: <Widget>[
             SizedBox(
@@ -117,7 +117,7 @@ class _SignInVerificationState extends State<SignInVerification> {
               onPressed: () {
                  Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const SignInVerification()),
+                  MaterialPageRoute(builder: (context) => AddContactPage()),
                   (route) => false, // Remove all routes below the new page
                 );
                   

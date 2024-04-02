@@ -19,12 +19,12 @@ class _LoginPageState extends State<LoginPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const Text(
-            "Login On Your Account",
+            "Login On Your Account                   ",
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
           ),
           SizedBox(
-            height: 8,
+            height: 18,
           ),
           Row(children: <Widget>[
             SizedBox(

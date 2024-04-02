@@ -52,7 +52,7 @@ class _SignInPageState extends State<SignInPage> {
               height: 70,
             ),
        const Text(
-            "Login On Your Account",
+            "SignIn For Account                           ",
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
           ),
@@ -161,7 +161,7 @@ class _SignInPageState extends State<SignInPage> {
               onPressed: () {
                  Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginVerification()),
+                  MaterialPageRoute(builder: (context) => const SignInVerification()),
                   (route) => false, // Remove all routes below the new page
                 );
                   
@@ -179,17 +179,17 @@ class _SignInPageState extends State<SignInPage> {
             height: 30,
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-            const Text("Don't Have Account?"),
+            const Text("You Have Account?"),
             TextButton(
               onPressed: () {
                 // Navigate to signup page
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const SignInVerification()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                   (route) => false, // Remove all routes below the new page
                 );
               },
-              child: const Text('Sign Up'),
+              child: const Text('Login'),
             ),
           ]),
  
