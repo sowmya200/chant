@@ -7,13 +7,13 @@ import 'package:chant/LoginVerification.dart';
 class LoginVerification extends StatefulWidget {
   const LoginVerification({Key? key}) : super(key: key);
 
+
   @override
   _LoginVerificationState createState() => _LoginVerificationState();
 }
 
 class _LoginVerificationState extends State<LoginVerification> {
-  // Define any variables or methods needed for the login verification process
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +89,7 @@ class _LoginVerificationState extends State<LoginVerification> {
              SizedBox(
             height: 15,
           ),
-          const Padding(
+           Padding(
             padding: EdgeInsets.all(15),
             child: TextField(
               obscureText: true,
@@ -104,6 +104,7 @@ class _LoginVerificationState extends State<LoginVerification> {
               ),
             ),
           ),
+
           SizedBox(
             height: 30,
           ),
