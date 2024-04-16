@@ -24,7 +24,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.13.1"
-  modal_bottom_sheet: ^3.0.0
+  modal_bottom_sheet: ^2.0.0
 
 flutter_icons:
   android: "ic_launcher"

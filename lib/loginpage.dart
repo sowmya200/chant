@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:chant/LoginVerification.dart';
 import 'package:chant/signinpage.dart';
 import 'package:chant/appbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -11,6 +12,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String CountryCode = '+91';
+  final TextEditingController mobileController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,9 +45,13 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {},
                   icon: const Icon(
                     IconData(0xe3b2, fontFamily: 'MaterialIcons'),
-                    color: Color.fromARGB(255, 90, 50,200), // Adjust the color of the icon as needed
+                    color: Color.fromARGB(255, 90, 50,
+                        200), // Adjust the color of the icon as needed
                   ),
-                  label: const Text('Login',style: TextStyle(fontWeight: FontWeight.w700),),
+                  label: const Text(
+                    'Login',
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                   ),
@@ -57,21 +65,22 @@ class _LoginPageState extends State<LoginPage> {
               child: DecoratedBox(
                 decoration: const BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: Color.fromARGB(255, 255, 255, 255)),
+                    bottom:
+                        BorderSide(color: Color.fromARGB(255, 255, 255, 255)),
                   ),
                 ),
                 child: ElevatedButton.icon(
-                  onPressed: (){
-                    },
+                  onPressed: () {},
                   icon: Icon(
                     Icons.verified_user,
                     size: 24, // Adjust the size of the icon as needed
                     color: Colors.black87,
                     //IconData(0xe5ca, fontFamily: 'MaterialIcons'),
                   ),
-                  label: const Text('Verification',
-                  style: TextStyle(color: Colors.black87),),
-                  
+                  label: const Text(
+                    'Verification',
+                    style: TextStyle(color: Colors.black87),
+                  ),
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                   ),
@@ -88,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
           const Padding(
             padding: EdgeInsets.all(15),
             child: TextField(
+              //controller: mobileController,
               obscureText: true,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -111,13 +121,28 @@ class _LoginPageState extends State<LoginPage> {
               label: const Text('Next Step',
                   style: TextStyle(
                       color: Color.fromARGB(255, 255, 255, 255), fontSize: 19)),
-              onPressed: () {
-                 Navigator.pushAndRemoveUntil(
+              onPressed: () async {
+                await FirebaseAuth.instance.verifyPhoneNumber(
+                  phoneNumber: '${CountryCode + mobileController.text}',
+                  verificationCompleted: (PhoneAuthCredential credential) {},
+                  verificationFailed: (FirebaseAuthException e) {},
+                  codeSent: (String verificationId, int? resendToken) {},
+                  codeAutoRetrievalTimeout: (String verificationId) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LoginVerification(
+                                  MobileNumber:'$CountryCode${mobileController.text}', VerificationId: verificationId,
+                                )));
+                  },
+                );
+                Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) =>LoginPage()),
+
+                  MaterialPageRoute(
+                      builder: (context) => const LoginVerification()),
                   (route) => false, // Remove all routes below the new page
                 );
-                  
               },
               style: ButtonStyle(
                 backgroundColor:
