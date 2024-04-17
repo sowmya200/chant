@@ -1,10 +1,13 @@
 import 'package:chant/chat_page.dart';
-import 'package:chant/signinverification.dart';
+import 'package:chant/imageConnection.dart';
 import 'package:flutter/material.dart';
 import 'package:chant/loginpage.dart';
 import 'package:chant/LoginVerification.dart';
 import 'package:chant/appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignInPage extends StatefulWidget {
   SignInPage({Key? key}) : super(key: key);
@@ -15,6 +18,13 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   //late MyAppBar myAppBar;
+  Uint8List? _image;
+  void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = img;
+    });
+  }
 
   final nameController = TextEditingController();
   final phoneNumberController = TextEditingController();
@@ -37,21 +47,31 @@ class _SignInPageState extends State<SignInPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Add your circular avatar here
-              CircleAvatar(
-                radius: 50, // Adjust the size of the avatar as needed
-                backgroundImage: AssetImage(
-                    "assets/default profile.jpg"), // Replace with your avatar image
-                child: Stack(children: [
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: CircleAvatar(
-                      radius: 15,
-                      backgroundColor: Color.fromARGB(255, 187, 166, 246),
-                      child: Icon(Icons.add),
+              _image != null
+                  ? CircleAvatar(
+                      radius: 50,
+                      backgroundImage: MemoryImage(_image!),
+                    )
+                  : CircleAvatar(
+                      radius: 50, // Adjust the size of the avatar as needed
+                      backgroundImage: AssetImage(
+                          "assets/default profile.jpg"), // Replace with your avatar image
+                      child: Stack(children: [
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: GestureDetector(
+                            onTap: selectImage,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Color.fromARGB(255, 187, 166, 246),
+                            
+                              
+                              child: Icon(Icons.add),
+                            ),
+                          ),
+                        ),
+                      ]),
                     ),
-                  ),
-                ]),
-              ),
               SizedBox(
                 height: 70,
               ),
