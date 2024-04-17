@@ -7,23 +7,23 @@ import 'package:chant/LoginVerification.dart';
 import 'package:chant/chat_page.dart';
 
 class LoginVerification extends StatefulWidget {
-  final String MobileNumber;
-  final String VerificationId;
+  // final String mobileNumber;
+  // final String verificationId;
 
-  LoginVerification({required this.MobileNumber, required this.VerificationId});
+  // LoginVerification({required this.mobileNumber, required this.verificationId});
 
   @override
   _LoginVerificationState createState() => _LoginVerificationState();
-  
 }
 
 class _LoginVerificationState extends State<LoginVerification> {
-  final TextEditingController OTPController = TextEditingController();
-  FirebaseAuth auth = FirebaseAuth.instance;
+  // final TextEditingController OTPController = TextEditingController();
+  // FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: MyAppBar(),
       body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -105,13 +105,14 @@ class _LoginVerificationState extends State<LoginVerification> {
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Verification',
-                  hintText: 'Enter Verification Number',
+                  labelText: 'PASSWORD',
+                  hintText: 'Enter Your Password',
                   prefixIcon: Icon(
-                    IconData(0xe4a2, fontFamily: 'MaterialIcons'),
+                    Icons.lock,
                     color:
                         Colors.grey, // Adjust the color of the icon as needed
                   ),
+
                 ),
               ),
             ),
@@ -130,18 +131,18 @@ class _LoginVerificationState extends State<LoginVerification> {
                         color: Color.fromARGB(255, 255, 255, 255),
                         fontSize: 19)),
                 onPressed: () async {
-                  // Create a PhoneAuthCredential with the code
-                  PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                      verificationId: widget.VerificationId,
-                       smsCode: OTPController.text);
+                  // // Create a PhoneAuthCredential with the code
+                  // PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                  //     verificationId: widget.verificationId,
+                  //      smsCode: OTPController.text);
 
-                  // Sign the user in (or link) with the credential
-                  await auth.signInWithCredential(credential);
+                  // // Sign the user in (or link) with the credential
+                  // await auth.signInWithCredential(credential);
 
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ChatPage()),
+                        builder: (context) => LoginPage()),
                     (route) => false, // Remove all routes below the new page
                   );
                 },

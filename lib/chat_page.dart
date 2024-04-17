@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatPage extends StatefulWidget {
+  final TextEditingController nameController;
+  final TextEditingController phoneNumberController;
+  final TextEditingController passwordController;
+
+  ChatPage({
+    required this.nameController,
+    required this.phoneNumberController,
+    required this.passwordController,
+  });
+
   @override
-  _ChatPageState createState() => _ChatPageState();
+  State<StatefulWidget> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
@@ -14,9 +24,15 @@ class _ChatPageState extends State<ChatPage> {
         title: Text('Chat Page'),
       ),
       body: Center(
-        child: Text(
-          'Welcome to the Chat Page!',
-          style: TextStyle(fontSize: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            
+            Text(
+              'Welcome to the Chat Page!',
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
         ),
       ),
     );

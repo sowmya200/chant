@@ -1,3 +1,4 @@
+import 'package:chant/loginpage.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chant/chat_page.dart';
@@ -41,7 +42,7 @@ class _AddContactPageState extends State<AddContactPage> {
             onPressed: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => ChatPage()),
+                MaterialPageRoute(builder: (context) => LoginPage()),
                 (route) => false,
               );
             },

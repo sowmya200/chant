@@ -16,6 +16,7 @@ class _SignInVerificationState extends State<SignInVerification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: MyAppBar(),
 
       body:Column(mainAxisAlignment: MainAxisAlignment.center,

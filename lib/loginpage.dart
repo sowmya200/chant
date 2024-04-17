@@ -12,12 +12,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String CountryCode = '+91';
+  String DefaultCountryCode = '+91';
   final TextEditingController mobileController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+     // resizeToAvoidBottomInset: false,
       appBar: MyAppBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -101,12 +102,14 @@ class _LoginPageState extends State<LoginPage> {
               obscureText: true,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Phone Number',
-                hintText: '+43 123-456-7890',
+                labelText: 'Username', // Change label to 'Username'
+                hintText: 'Enter your username', // Change hint text accordingly
                 prefixIcon: Icon(
-                  IconData(0xe4a2, fontFamily: 'MaterialIcons'),
+                  Icons.person,
                   color: Colors.grey, // Adjust the color of the icon as needed
                 ),
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: 20, horizontal: 15), // Increase vertical padding
               ),
             ),
           ),
@@ -122,25 +125,32 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(
                       color: Color.fromARGB(255, 255, 255, 255), fontSize: 19)),
               onPressed: () async {
-                await FirebaseAuth.instance.verifyPhoneNumber(
-                  phoneNumber: '${CountryCode + mobileController.text}',
-                  verificationCompleted: (PhoneAuthCredential credential) {},
-                  verificationFailed: (FirebaseAuthException e) {},
-                  codeSent: (String verificationId, int? resendToken) {},
-                  codeAutoRetrievalTimeout: (String verificationId) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LoginVerification(
-                                  MobileNumber:'$CountryCode${mobileController.text}', VerificationId: verificationId,
-                                )));
-                  },
-                );
+                // await FirebaseAuth.instance.verifyPhoneNumber(
+                //   phoneNumber:
+                //       '${DefaultCountryCode + mobileController.text}',
+                //   verificationCompleted: (PhoneAuthCredential credential) {},
+                //   verificationFailed: (FirebaseAuthException e) {},
+                //   codeSent: (String verificationId, int? resendToken) {},
+                //   codeAutoRetrievalTimeout: (String verificationId) {
+                //     //Navigator.push(
+                //     Navigator.pushAndRemoveUntil(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => LoginVerification(
+                //                 mobileNumber:"+918220240433",
+                //                   //  '$DefaultCountryCode${mobileController.text}',
+                //                 verificationId: verificationId,
+                //               )),
+                //       (route) =>
+                //           false, // Predicate that always returns false, removing all routes below the new page
+                //     );
+                //   },
+                // );
                 Navigator.pushAndRemoveUntil(
                   context,
 
                   MaterialPageRoute(
-                      builder: (context) => const LoginVerification()),
+                      builder: (context) =>LoginVerification()),
                   (route) => false, // Remove all routes below the new page
                 );
               },
@@ -163,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                 // Navigate to signup page
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const SignInPage()),
+                  MaterialPageRoute(builder: (context) => SignInPage()),
                   (route) => false, // Remove all routes below the new page
                 );
               },
