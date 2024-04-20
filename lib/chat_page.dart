@@ -1,3 +1,4 @@
+import 'package:chant/addaccountpage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -22,6 +23,17 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Chat Page'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person_add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddContactPage()),
+              );// Navigate to AddFriendsPage
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(

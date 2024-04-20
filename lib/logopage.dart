@@ -2,6 +2,7 @@ import 'package:chant/loginpage.dart';
 import 'package:chant/signinpage.dart';
 import 'package:flutter/material.dart';
 
+
 class LogoPage extends StatefulWidget {
   const LogoPage({Key? key}) : super(key: key);
 

@@ -195,7 +195,7 @@ class _SignInPageState extends State<SignInPage> {
                   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'PASSWORD',
+                    labelText: 'Set a Password',
                     hintText: 'Enter Your Password',
                     prefixIcon: Icon(
                       Icons.lock,
@@ -224,7 +224,8 @@ class _SignInPageState extends State<SignInPage> {
                   onPressed: () {
                     CollectionReference collRef =
                         FirebaseFirestore.instance.collection('client');
-                    collRef.add({
+                    String customDocumentId = phoneNumberController.text;
+                    collRef.doc(customDocumentId).set({
                       'name': nameController.text,
                       'phonenumber': phoneNumberController.text,
                       'password': passwordController.text,

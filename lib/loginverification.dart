@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chant/LoginVerification.dart';
 import 'package:chant/chat_page.dart';
+import 'package:chant/chatconnections/fetchingdata.dart';
 
 class LoginVerification extends StatefulWidget {
   // final String mobileNumber;
@@ -142,7 +143,7 @@ class _LoginVerificationState extends State<LoginVerification> {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => LoginPage()),
+                        builder: (context) => DocumentListPage()),
                     (route) => false, // Remove all routes below the new page
                   );
                 },
