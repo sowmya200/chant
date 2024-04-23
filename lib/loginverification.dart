@@ -8,12 +8,10 @@ import 'package:chant/chat_page.dart';
 import 'package:chant/chatconnections/fetchingdata.dart';
 
 class LoginVerification extends StatefulWidget {
-  
-
-   final TextEditingController nameController;
+  final TextEditingController nameController;
   // final String verificationId;
 
-   LoginVerification({required this.nameController});
+  LoginVerification({required this.nameController});
 
   @override
   _LoginVerificationState createState() => _LoginVerificationState();
@@ -23,9 +21,8 @@ class _LoginVerificationState extends State<LoginVerification> {
   // final TextEditingController OTPController = TextEditingController();
   // FirebaseAuth auth = FirebaseAuth.instance;
 
- final passwordController = TextEditingController();
- 
- 
+  final passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +116,6 @@ class _LoginVerificationState extends State<LoginVerification> {
                     color:
                         Colors.grey, // Adjust the color of the icon as needed
                   ),
-
                 ),
               ),
             ),
@@ -138,27 +134,19 @@ class _LoginVerificationState extends State<LoginVerification> {
                         color: Color.fromARGB(255, 255, 255, 255),
                         fontSize: 19)),
                 onPressed: () async {
-                  // // Create a PhoneAuthCredential with the code
-                  // PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                  //     verificationId: widget.verificationId,
-                  //      smsCode: OTPController.text);
-
-                  // // Sign the user in (or link) with the credential
-                  // await auth.signInWithCredential(credential);
-
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
                         builder: (context) => DocumentListPage(
-                          nameController: widget.nameController,
-                          passwordController: passwordController,
-                        )),
+                              nameController: widget.nameController,
+                              // passwordController: passwordController,
+                            )),
                     (route) => false, // Remove all routes below the new page
                   );
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                      Color.fromARGB(255, 90, 50, 200)),
+                      Color.fromARGB(255, 90, 15, 200)),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.zero,

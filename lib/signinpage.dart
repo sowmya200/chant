@@ -224,7 +224,7 @@ class _SignInPageState extends State<SignInPage> {
                   onPressed: () {
                     CollectionReference collRef =
                         FirebaseFirestore.instance.collection('client');
-                    String customDocumentId = phoneNumberController.text;
+                    String customDocumentId = nameController.text;
                     collRef.doc(customDocumentId).set({
                       'name': nameController.text,
                       'phonenumber': phoneNumberController.text,
