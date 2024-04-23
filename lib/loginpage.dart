@@ -13,8 +13,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String DefaultCountryCode = '+91';
-  final TextEditingController mobileController = TextEditingController();
+  //final TextEditingController mobileController = TextEditingController();
 
+   final nameController = TextEditingController();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,21 +97,25 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: 15,
           ),
-          const Padding(
+         Padding(
             padding: EdgeInsets.all(15),
-            child: TextField(
-              //controller: mobileController,
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Username', // Change label to 'Username'
-                hintText: 'Enter your username', // Change hint text accordingly
-                prefixIcon: Icon(
-                  Icons.person,
-                  color: Colors.grey, // Adjust the color of the icon as needed
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: TextFormField(
+                //controller: mobileController,
+                controller: nameController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Username', // Change label to 'Username'
+                  hintText: 'Enter your username', // Change hint text accordingly
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color: Colors.grey, // Adjust the color of the icon as needed
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                      vertical: 20, horizontal: 15), // Increase vertical padding
                 ),
-                contentPadding: EdgeInsets.symmetric(
-                    vertical: 20, horizontal: 15), // Increase vertical padding
               ),
             ),
           ),
@@ -148,11 +154,13 @@ class _LoginPageState extends State<LoginPage> {
                 // );
                 Navigator.pushAndRemoveUntil(
                   context,
-
                   MaterialPageRoute(
-                      builder: (context) =>LoginVerification()),
+                    builder: (context) =>
+                        LoginVerification(nameController: nameController,),
+                  ),
                   (route) => false, // Remove all routes below the new page
                 );
+
               },
               style: ButtonStyle(
                 backgroundColor:

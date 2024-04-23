@@ -4,7 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:chant/addaccountpage.dart';
 
 class SignInVerification extends StatefulWidget {
-  const SignInVerification({Key? key}) : super(key: key);
+  final TextEditingController nameController;
+  final TextEditingController phoneNumberController;
+  final TextEditingController passwordController;
+
+  SignInVerification({
+    required this.nameController,
+    required this.phoneNumberController,
+    required this.passwordController,
+  });
+
 
   @override
   _SignInVerificationState createState() => _SignInVerificationState();
@@ -12,6 +21,7 @@ class SignInVerification extends StatefulWidget {
 
 class _SignInVerificationState extends State<SignInVerification> {
   // Define any variables or methods needed for the login verification process
+  
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +161,7 @@ class _SignInVerificationState extends State<SignInVerification> {
                 // Navigate to signup page
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const SignInVerification()),
+                  MaterialPageRoute(builder: (context) => SignInPage()),
                   (route) => false, // Remove all routes below the new page
                 );
               },

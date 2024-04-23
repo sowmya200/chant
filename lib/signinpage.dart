@@ -2,7 +2,7 @@ import 'package:chant/chat_page.dart';
 import 'package:chant/imageConnection.dart';
 import 'package:flutter/material.dart';
 import 'package:chant/loginpage.dart';
-import 'package:chant/LoginVerification.dart';
+import 'package:chant/SignInVerification.dart';
 import 'package:chant/appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -234,7 +234,7 @@ class _SignInPageState extends State<SignInPage> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ChatPage(
+                          builder: (context) => SignInVerification(
                                 nameController: nameController,
                                 phoneNumberController: phoneNumberController,
                                 passwordController: passwordController,

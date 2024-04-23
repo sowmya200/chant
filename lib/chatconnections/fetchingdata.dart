@@ -3,6 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DocumentListPage extends StatefulWidget {
+  final TextEditingController nameController;
+  final TextEditingController passwordController;
+
+  DocumentListPage({
+    required this.nameController,
+    //required this.phoneNumberController,
+    required this.passwordController,
+  });
   @override
   _DocumentListPageState createState() => _DocumentListPageState();
 }

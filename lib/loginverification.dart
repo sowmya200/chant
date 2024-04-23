@@ -8,10 +8,12 @@ import 'package:chant/chat_page.dart';
 import 'package:chant/chatconnections/fetchingdata.dart';
 
 class LoginVerification extends StatefulWidget {
-  // final String mobileNumber;
+  
+
+   final TextEditingController nameController;
   // final String verificationId;
 
-  // LoginVerification({required this.mobileNumber, required this.verificationId});
+   LoginVerification({required this.nameController});
 
   @override
   _LoginVerificationState createState() => _LoginVerificationState();
@@ -21,6 +23,9 @@ class _LoginVerificationState extends State<LoginVerification> {
   // final TextEditingController OTPController = TextEditingController();
   // FirebaseAuth auth = FirebaseAuth.instance;
 
+ final passwordController = TextEditingController();
+ 
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,6 +108,7 @@ class _LoginVerificationState extends State<LoginVerification> {
             Padding(
               padding: EdgeInsets.all(15),
               child: TextField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -143,7 +149,10 @@ class _LoginVerificationState extends State<LoginVerification> {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => DocumentListPage()),
+                        builder: (context) => DocumentListPage(
+                          nameController: widget.nameController,
+                          passwordController: passwordController,
+                        )),
                     (route) => false, // Remove all routes below the new page
                   );
                 },
