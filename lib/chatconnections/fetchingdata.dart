@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chant/chatconnections/message.dart';
 
 class DocumentListPage extends StatefulWidget {
   final TextEditingController nameController;
- // final TextEditingController passwordController;
+  // final TextEditingController passwordController;
 
   DocumentListPage({
     required this.nameController,
@@ -20,7 +19,7 @@ class _DocumentListPageState extends State<DocumentListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:const Color.fromARGB(255,242,242,242),
+      backgroundColor: const Color.fromARGB(255, 242, 242, 242),
       appBar: AppBar(
         title: Text('Document List'),
       ),
@@ -46,6 +45,9 @@ class _DocumentListPageState extends State<DocumentListPage> {
             snapshot.data!.docs.forEach((doc) {
               if (doc.exists) {
                 documentNames.add(doc.id);
+                SizedBox(
+                  height: 10,
+                );
               }
             });
 
@@ -55,7 +57,6 @@ class _DocumentListPageState extends State<DocumentListPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: documentNames.map((name) {
                   // Generate a random color for each button
-                 
 
                   // return Padding(
                   //   padding: const EdgeInsets.all(4.0),
@@ -71,63 +72,74 @@ class _DocumentListPageState extends State<DocumentListPage> {
                   //   //           ),
                   //   //         ));
                   //   //   },
-                      
+
                   //   //   child: Text(
                   //   //     name,
                   //   //     style: TextStyle(
                   //   //         color: const Color.fromARGB(255, 0, 0, 0)),
                   //   //   ),
                   //   // ),
-                    
-    return Container(
-      color: const Color.fromARGB(255,242,242,242), // Set the background color for the text
-      padding: EdgeInsets.all(8.0), // Add padding to the container
-      margin: EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0), // Add margin to the container
-      child: GestureDetector(
-  onTap: () {
-    // Handle onTap event here
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MessagePage(
-          senderName: widget.nameController,
-          receiverName: name,
-        ),
-      ),
-    );
-  },child:ListTile(
-        title:Column(children: [
-          Row(children: [
-           CircleAvatar(
-                      radius: 30, // Adjust the size of the avatar as needed
-                      backgroundImage: AssetImage(
-                          "assets/default profile.jpg"),),
-                          SizedBox(width: 10,),
-                          Text(
-          name,
-          style: TextStyle(
-            color: const Color.fromARGB(255, 0, 0, 0),
-             fontWeight: FontWeight.bold,
-            // Set the text color
-          ),
-          
-        ),],),
-        SizedBox(height: 10,),
-         Divider(
-              color: Color.fromARGB(255, 131, 70, 201)
-            )
-        ],)
-        // subtitle: Text(
-        //   messages,
-        //   style: TextStyle(
-        //     color: Colors.white, // Set the text color
-        //   ),
-        // ),
-      ),
-    ),);
-  
 
-
+                  return Container(
+                    color: const Color.fromARGB(255, 242, 242,
+                        242), // Set the background color for the text
+                    padding:
+                        EdgeInsets.all(8.0), // Add padding to the container
+                    margin: EdgeInsets.symmetric(
+                        vertical: 2.0,
+                        horizontal: 8.0), // Add margin to the container
+                    child: GestureDetector(
+                      onTap: () {
+                        // Handle onTap event here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MessagePage(
+                              senderName: widget.nameController,
+                              receiverName: name,
+                            ),
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                          title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius:
+                                    30, // Adjust the size of the avatar as needed
+                                backgroundImage:
+                                    AssetImage("assets/default profile.jpg"),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                name,
+                                style: TextStyle(
+                                  color: const Color.fromARGB(255, 0, 0, 0),
+                                  fontWeight: FontWeight.bold,
+                                  // Set the text color
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Divider(color: Color.fromARGB(255, 131, 70, 201))
+                        ],
+                      )
+                          // subtitle: Text(
+                          //   messages,
+                          //   style: TextStyle(
+                          //     color: Colors.white, // Set the text color
+                          //   ),
+                          // ),
+                          ),
+                    ),
+                  );
                 }).toList(),
               ),
             );
@@ -141,4 +153,3 @@ class _DocumentListPageState extends State<DocumentListPage> {
     );
   }
 }
-

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 class MessagePage extends StatefulWidget {
@@ -24,9 +25,8 @@ class _MessagePageState extends State<MessagePage> {
         backgroundColor: Color.fromARGB(255, 123,63,211), // Change the background color here
       ),
       body: Container(
-       // backgroundColor: Color.fromARGB(255, 123,63,211),
-        //color: Colors.black,
         decoration: BoxDecoration(
+           
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(60),
             topRight: Radius.circular(60),
@@ -35,44 +35,45 @@ class _MessagePageState extends State<MessagePage> {
         ),
         // tileColor: Color.fromARGB(255, 123,63,211),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: ListView.builder(
-                reverse: true, // Reverse the list so new messages appear at the bottom
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(messages[index]['message']),
-                    subtitle: Text(messages[index]['time']),
-                   
-                  );
-                },
+  padding: const EdgeInsets.symmetric(vertical: 16.0),
+  reverse: true, // Reverse the list so new messages appear at the bottom
+  itemCount: messages.length,
+  itemBuilder: (context, index) {
+    return Align(
+      alignment: Alignment.centerRight, // Align messages to the right side
+      child: Container(
+        padding: EdgeInsets.all(12.0),
+        margin: EdgeInsets.only(bottom: 8.0, right: 8.0, left: 64.0), // Adjust margins as needed
+        decoration: BoxDecoration(
+          color: Colors.blueAccent, // Color of the message bubble
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              messages[index]['message'],
+              style: TextStyle(fontSize: 16.0, color: Colors.white), // Text color
+            ),
+            SizedBox(height: 4.0),
+            Text(
+              messages[index]['time'],
+              style: TextStyle(
+                color: Colors.grey,
               ),
-//               ListView.builder(
-//   reverse: true,
-//   itemCount: messages.length,
-//   itemBuilder: (context, index) {
-//     return Container(
-//       color: Colors.blue, // Set the background color for the text
-//       padding: EdgeInsets.all(8.0), // Add padding to the container
-//       margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0), // Add margin to the container
-//       child: ListTile(
-//         title: Text(
-//           messages[index]['message'],
-//           style: TextStyle(
-//             color: Colors.white, // Set the text color
-//           ),
-//         ),
-//         subtitle: Text(
-//           messages[index]['time'],
-//           style: TextStyle(
-//             color: Colors.white, // Set the text color
-//           ),
-//         ),
-//       ),
-//     );
-//   },
-// ),
+            ),
+          ],
+        ),
+      ),
+    );
+  },
+),
+
+
 
             ),
             Padding(
