@@ -34,6 +34,10 @@ class _ChatPageState extends State<ChatPage> {
             },
           ),
         ],
+         shape: ContinuousRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30))),
       ),
       body: Center(
         child: Column(

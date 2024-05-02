@@ -1,27 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chant/chatconnections/message.dart';
+import 'package:chant/addaccountpage.dart';
+import 'package:flutter/widgets.dart';
 
 class DocumentListPage extends StatefulWidget {
   final TextEditingController nameController;
-  // final TextEditingController passwordController;
 
   DocumentListPage({
     required this.nameController,
-    //required this.phoneNumberController,
-    //required this.passwordController,
   });
+
   @override
   _DocumentListPageState createState() => _DocumentListPageState();
 }
 
 class _DocumentListPageState extends State<DocumentListPage> {
+  String _searchQuery = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 242, 242, 242),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Document List'),
+        backgroundColor: const Color.fromARGB(255,123,63,211),
+        title: Text('PROGRASIVE WEB APP',style: TextStyle(color: Colors.white,fontSize:25,fontWeight: FontWeight.bold),),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person_add,color: Colors.white,),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddContactPage()),
+              );
+            },
+          ),
+        ],
+        bottom: PreferredSize(
+  preferredSize: Size.fromHeight(120), // Adjust the height as needed
+  child: Container(
+    //color: Colors.white,
+    child: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value;
+              });
+            },
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              hintText: 'Search...',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+            ),
+            style: TextStyle(color: Colors.black), // Change text color here
+          ),
+        ),
+        SizedBox(height: 15),
+      ],
+    ),
+  ),
+),
+
+
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('client').snapshots(),
@@ -38,110 +91,57 @@ class _DocumentListPageState extends State<DocumentListPage> {
             );
           }
 
-          // Check if snapshot data is not null before accessing docs
           if (snapshot.data != null) {
-            // Extract document names from the snapshot
             List<String> documentNames = [];
             snapshot.data!.docs.forEach((doc) {
               if (doc.exists) {
                 documentNames.add(doc.id);
-                SizedBox(
-                  height: 10,
-                );
               }
             });
 
-            return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: documentNames.map((name) {
-                  // Generate a random color for each button
+            return ListView.builder(
+              itemCount: documentNames.length,
+              itemBuilder: (context, index) {
+                String name = documentNames[index];
 
-                  // return Padding(
-                  //   padding: const EdgeInsets.all(4.0),
-                  //    child: //ElevatedButton(
-                  //   //   onPressed: () {
-                  //   //     // Handle button press
-                  //   //     Navigator.push(
-                  //   //         context,
-                  //   //         MaterialPageRoute(
-                  //   //           builder: (context) => MessagePage(
-                  //   //             senderName: widget.nameController,
-                  //   //             receiverName: name,
-                  //   //           ),
-                  //   //         ));
-                  //   //   },
+                // Check if the current document matches the search query
+                if (_searchQuery.isNotEmpty &&
+                    !name.toLowerCase().contains(_searchQuery.toLowerCase())) {
+                  return SizedBox.shrink(); // Hide if not matching
+                }
 
-                  //   //   child: Text(
-                  //   //     name,
-                  //   //     style: TextStyle(
-                  //   //         color: const Color.fromARGB(255, 0, 0, 0)),
-                  //   //   ),
-                  //   // ),
-
-                  return Container(
-                    color: const Color.fromARGB(255, 242, 242,
-                        242), // Set the background color for the text
-                    padding:
-                        EdgeInsets.all(8.0), // Add padding to the container
-                    margin: EdgeInsets.symmetric(
-                        vertical: 2.0,
-                        horizontal: 8.0), // Add margin to the container
-                    child: GestureDetector(
-                      onTap: () {
-                        // Handle onTap event here
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MessagePage(
-                              senderName: widget.nameController,
-                              receiverName: name,
-                            ),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MessagePage(
+                            senderName: widget.nameController,
+                            receiverName: name,
                           ),
-                        );
-                      },
-                      child: ListTile(
-                          title: Column(
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius:
-                                    30, // Adjust the size of the avatar as needed
-                                backgroundImage:
-                                    AssetImage("assets/default profile.jpg"),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                name,
-                                style: TextStyle(
-                                  color: const Color.fromARGB(255, 0, 0, 0),
-                                  fontWeight: FontWeight.bold,
-                                  // Set the text color
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Divider(color: Color.fromARGB(255, 131, 70, 201))
-                        ],
-                      )
-                          // subtitle: Text(
-                          //   messages,
-                          //   style: TextStyle(
-                          //     color: Colors.white, // Set the text color
-                          //   ),
-                          // ),
-                          ),
+                        ),
+                      );
+                    },
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: AssetImage("assets/default_profile.jpg"),
                     ),
-                  );
-                }).toList(),
-              ),
+                    title: Text(
+                      name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      "Tap to open chat",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    trailing: Icon(Icons.arrow_forward),
+                  ),
+                );
+              },
             );
           } else {
             return Center(
