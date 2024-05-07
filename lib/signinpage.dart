@@ -1,4 +1,5 @@
 import 'package:chant/chat_page.dart';
+import 'dart:io';
 import 'package:chant/imageConnection.dart';
 import 'package:flutter/material.dart';
 import 'package:chant/loginpage.dart';
@@ -8,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class SignInPage extends StatefulWidget {
   SignInPage({Key? key}) : super(key: key);
@@ -19,16 +21,48 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   //late MyAppBar myAppBar;
   Uint8List? _image;
+  String? _imageUrl;
+
   void selectImage() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
-    setState(() {
-      _image = img;
-    });
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      try {
+        final File imageFile = File(pickedFile.path);
+        final Uint8List imageBytes = await imageFile.readAsBytes();
+        _imageUrl = await uploadImageToFirebaseStorage(imageFile);
+
+        // Save user information including image URL to Firestore
+
+        // Update state to reflect the selected image
+        setState(() {
+          _image = imageBytes;
+        });
+      } catch (e) {
+        print('Error selecting image: $e');
+      }
+    }
+  }
+
+  Future<String> uploadImageToFirebaseStorage(File imageFile) async {
+    try {
+      String fileName =
+          DateTime.now().millisecondsSinceEpoch.toString(); // Unique file name
+      Reference storageRef =
+          FirebaseStorage.instance.ref().child('images/$fileName.jpg');
+      UploadTask uploadTask = storageRef.putFile(imageFile);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      return await taskSnapshot.ref.getDownloadURL();
+    } catch (e) {
+      print('Error uploading image to Firebase Storage: $e');
+      throw e; // Re-throw the error to handle it in the calling function
+    }
   }
 
   final nameController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +95,10 @@ class _SignInPageState extends State<SignInPage> {
                           alignment: Alignment.bottomRight,
                           child: GestureDetector(
                             onTap: selectImage,
-                          child: CircleAvatar(
-                            radius: 15,
-                            backgroundColor: Color.fromARGB(255, 187, 166, 246),
-                            
-                              
+                            child: CircleAvatar(
+                              radius: 15,
+                              backgroundColor:
+                                  Color.fromARGB(255, 187, 166, 246),
                               child: Icon(Icons.add),
                             ),
                           ),
@@ -229,6 +262,7 @@ class _SignInPageState extends State<SignInPage> {
                       'name': nameController.text,
                       'phonenumber': phoneNumberController.text,
                       'password': passwordController.text,
+                      'imageUrl': _imageUrl,
                     });
 
                     Navigator.pushAndRemoveUntil(
