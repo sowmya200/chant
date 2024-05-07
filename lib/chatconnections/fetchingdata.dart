@@ -24,7 +24,7 @@ class _DocumentListPageState extends State<DocumentListPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255,123,63,211),
-        title: Text('PROGRASIVE WEB APP',style: TextStyle(color: Colors.white,fontSize:25,fontWeight: FontWeight.bold),),
+        title: Text('ChantApp',style: TextStyle(color: Colors.white,fontSize:25,fontWeight: FontWeight.bold),),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(30),
@@ -150,6 +150,16 @@ class _DocumentListPageState extends State<DocumentListPage> {
           }
         },
       ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+           Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddContactPage()));
+          },
+          child: Icon(Icons.person_add,color: Colors.white,), // Icon for the floating action button
+          backgroundColor: const Color.fromARGB(255,123,63,211), // Background color of the button
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

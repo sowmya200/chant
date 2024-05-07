@@ -31,80 +31,104 @@ class _MessagePageState extends State<MessagePage> {
         children: [
           Expanded(
             child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('messages')
-                  .where('sender', isEqualTo: widget.senderName.text)
-                  .where('receiver', isEqualTo: widget.receiverName)
-                  .orderBy('time', descending: true)
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot?> snapshot) {
-                if (!snapshot.hasData || snapshot.data == null) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+  stream: FirebaseFirestore.instance
+    .collection('messages')
+    .where('sender', isEqualTo: widget.receiverName)
+    .where('receiver', isEqualTo: widget.senderName.text)
+    .orderBy('time', descending: true)
+    .snapshots(),
+  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot?> snapshot) {
+    if (!snapshot.hasData || snapshot.data == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    var receiverStream = FirebaseFirestore.instance
+      .collection('messages')
+      .where('sender', isEqualTo: widget.senderName.text)
+      .where('receiver', isEqualTo: widget.receiverName)
+      .orderBy('time', descending: true)
+      .snapshots();
 
-                return ListView.builder(
-                  reverse: true,
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    var messageData =
-                        snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                    var message = messageData['message'];
-                    var time = messageData['time'];
+    return StreamBuilder(
+      stream: receiverStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot?> receiverSnapshot) {
+        if (!receiverSnapshot.hasData || receiverSnapshot.data == null) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-                    DateTime dateTime;
+        var allMessages = <DocumentSnapshot>[...snapshot.data!.docs, ...receiverSnapshot.data!.docs];
+        allMessages.sort((a, b) {
+          var timeA = a['time'] as Timestamp;
+          var timeB = b['time'] as Timestamp;
+          return timeB.compareTo(timeA);
+        });
 
-                    if (time is Timestamp) {
-                      dateTime = time.toDate();
-                    } else if (time is String) {
-                      try {
-                        // Attempt to parse the string as a DateTime
-                        dateTime = DateTime.parse(time);
-                      } catch (e) {
-                        // Handle parsing errors
-                        print('Error parsing DateTime: $e');
-                        // Default to current time if parsing fails
-                        dateTime = DateTime.now();
-                      }
-                    } else {
-                      // Default to current time if the time field is not a Timestamp or String
-                      dateTime = DateTime.now();
-                    }
+        return ListView.builder(
+          reverse: true,
+          itemCount: allMessages.length,
+          itemBuilder: (context, index) {
+            var messageData = allMessages[index].data() as Map<String, dynamic>;
+            var message = messageData['message'];
+            var time = messageData['time'];
+            var sender = messageData['sender'];
 
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          padding: EdgeInsets.all(12.0),
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 126, 102, 180),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                message,
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.white),
-                              ),
-                              SizedBox(height: 4.0),
-                              Text(
-                                DateFormat.yMd().add_jm().format(dateTime),
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
+            DateTime dateTime;
+
+            if (time is Timestamp) {
+              dateTime = time.toDate();
+            } else if (time is String) {
+              try {
+                dateTime = DateTime.parse(time);
+              } catch (e) {
+                print('Error parsing DateTime: $e');
+                dateTime = DateTime.now();
+              }
+            } else {
+              dateTime = DateTime.now();
+            }
+
+            bool isSender = sender == widget.senderName.text;
+
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+                child: Container(
+                  padding: EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: isSender ? Color.fromARGB(255, 126, 102, 180) : const Color.fromARGB(255,222,207,228),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        message,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: isSender ? Colors.white : Colors.black,
                         ),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
+                      SizedBox(height: 4.0),
+                      Text(
+                        DateFormat.yMd().add_jm().format(dateTime),
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  },
+),
+          
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -125,13 +149,14 @@ class _MessagePageState extends State<MessagePage> {
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () {
-                    sendMessage(context, widget.senderName.text, widget.receiverName);
+                    sendMessage(
+                        context, widget.senderName.text, widget.receiverName);
                   },
                 ),
               ],
             ),
           ),
-        ],
+        ], 
       ),
     );
   }
