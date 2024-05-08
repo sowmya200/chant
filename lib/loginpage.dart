@@ -97,28 +97,29 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: 15,
           ),
-         Padding(
-            padding: EdgeInsets.all(15),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: TextFormField(
-                //controller: mobileController,
-                controller: nameController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Username', // Change label to 'Username'
-                  hintText: 'Enter your username', // Change hint text accordingly
-                  prefixIcon: Icon(
-                    Icons.person,
-                    color: Colors.grey, // Adjust the color of the icon as needed
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                      vertical: 20, horizontal: 15), // Increase vertical padding
-                ),
-              ),
-            ),
-          ),
+        Padding(
+  padding: EdgeInsets.all(15),
+  child: Padding(
+    padding: EdgeInsets.all(8.0),
+    child: TextFormField(
+      //controller: mobileController,
+      controller: nameController,
+    //  obscureText: true,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Username', // Change label to 'Username'
+        hintText: 'Enter username', // Change hint text accordingly
+        prefixIcon: Icon(
+          Icons.person,
+          color: Colors.grey, // Adjust the color of the icon as needed
+        ),
+        contentPadding: EdgeInsets.symmetric(
+          vertical: 20, horizontal: 15), // Increase vertical padding
+      ),
+    ),
+  ),
+),
+
           SizedBox(
             height: 30,
           ),

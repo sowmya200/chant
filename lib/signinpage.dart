@@ -21,43 +21,43 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   //late MyAppBar myAppBar;
   Uint8List? _image;
-  String? _imageUrl;
+  // String? _imageUrl;
 
-  void selectImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      try {
-        final File imageFile = File(pickedFile.path);
-        final Uint8List imageBytes = await imageFile.readAsBytes();
-        _imageUrl = await uploadImageToFirebaseStorage(imageFile);
+  // void selectImage() async {
+  //   final pickedFile =
+  //       await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     try {
+  //       final File imageFile = File(pickedFile.path);
+  //       final Uint8List imageBytes = await imageFile.readAsBytes();
+  //       _imageUrl = await uploadImageToFirebaseStorage(imageFile);
 
-        // Save user information including image URL to Firestore
+  //       // Save user information including image URL to Firestore
 
-        // Update state to reflect the selected image
-        setState(() {
-          _image = imageBytes;
-        });
-      } catch (e) {
-        print('Error selecting image: $e');
-      }
-    }
-  }
+  //       // Update state to reflect the selected image
+  //       setState(() {
+  //         _image = imageBytes;
+  //       });
+  //     } catch (e) {
+  //       print('Error selecting image: $e');
+  //     }
+  //   }
+  // }
 
-  Future<String> uploadImageToFirebaseStorage(File imageFile) async {
-    try {
-      String fileName =
-          DateTime.now().millisecondsSinceEpoch.toString(); // Unique file name
-      Reference storageRef =
-          FirebaseStorage.instance.ref().child('images/$fileName.jpg');
-      UploadTask uploadTask = storageRef.putFile(imageFile);
-      TaskSnapshot taskSnapshot = await uploadTask;
-      return await taskSnapshot.ref.getDownloadURL();
-    } catch (e) {
-      print('Error uploading image to Firebase Storage: $e');
-      throw e; // Re-throw the error to handle it in the calling function
-    }
-  }
+  // Future<String> uploadImageToFirebaseStorage(File imageFile) async {
+  //   try {
+  //     String fileName =
+  //         DateTime.now().millisecondsSinceEpoch.toString(); // Unique file name
+  //     Reference storageRef =
+  //         FirebaseStorage.instance.ref().child('images/$fileName.jpg');
+  //     UploadTask uploadTask = storageRef.putFile(imageFile);
+  //     TaskSnapshot taskSnapshot = await uploadTask;
+  //     return await taskSnapshot.ref.getDownloadURL();
+  //   } catch (e) {
+  //     print('Error uploading image to Firebase Storage: $e');
+  //     throw e; // Re-throw the error to handle it in the calling function
+  //   }
+  // }
 
   final nameController = TextEditingController();
   final phoneNumberController = TextEditingController();
@@ -81,30 +81,30 @@ class _SignInPageState extends State<SignInPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Add your circular avatar here
-              _image != null
-                  ? CircleAvatar(
-                      radius: 50,
-                      backgroundImage: MemoryImage(_image!),
-                    )
-                  : CircleAvatar(
-                      radius: 50, // Adjust the size of the avatar as needed
-                      backgroundImage: AssetImage(
-                          "assets/default profile.jpg"), // Replace with your avatar image
-                      child: Stack(children: [
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: GestureDetector(
-                            onTap: selectImage,
-                            child: CircleAvatar(
-                              radius: 15,
-                              backgroundColor:
-                                  Color.fromARGB(255, 187, 166, 246),
-                              child: Icon(Icons.add),
-                            ),
-                          ),
-                        ),
-                      ]),
-                    ),
+              // _image != null
+              //     ? CircleAvatar(
+              //         radius: 50,
+              //         backgroundImage: MemoryImage(_image!),
+              //       )
+              //     : CircleAvatar(
+              //         radius: 50, // Adjust the size of the avatar as needed
+              //         backgroundImage: AssetImage(
+              //             "assets/default profile.jpg"), // Replace with your avatar image
+              //         child: Stack(children: [
+              //           Align(
+              //             alignment: Alignment.bottomRight,
+              //             child: GestureDetector(
+              //               onTap: selectImage,
+              //               child: CircleAvatar(
+              //                 radius: 15,
+              //                 backgroundColor:
+              //                     Color.fromARGB(255, 187, 166, 246),
+              //                 child: Icon(Icons.add),
+              //               ),
+              //             ),
+              //           ),
+              //         ]),
+              //       ),
               SizedBox(
                 height: 70,
               ),
@@ -114,7 +114,7 @@ class _SignInPageState extends State<SignInPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
               ),
               SizedBox(
-                height: 8,
+                height: 18,
               ),
               Row(children: <Widget>[
                 SizedBox(
@@ -185,7 +185,7 @@ class _SignInPageState extends State<SignInPage> {
                 padding: EdgeInsets.all(15),
                 child: TextFormField(
                   controller: nameController,
-                  obscureText: true,
+                  //obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Full Name',
@@ -205,7 +205,7 @@ class _SignInPageState extends State<SignInPage> {
                 padding: EdgeInsets.all(15),
                 child: TextField(
                   controller: phoneNumberController,
-                  obscureText: true,
+               //   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Phone Number',
@@ -225,7 +225,7 @@ class _SignInPageState extends State<SignInPage> {
                 padding: EdgeInsets.all(15),
                 child: TextField(
                   controller: passwordController,
-                  obscureText: true,
+               //   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Set a Password',
@@ -262,7 +262,7 @@ class _SignInPageState extends State<SignInPage> {
                       'name': nameController.text,
                       'phonenumber': phoneNumberController.text,
                       'password': passwordController.text,
-                      'imageUrl': _imageUrl,
+                     // 'imageUrl': _imageUrl,
                     });
 
                     Navigator.pushAndRemoveUntil(
