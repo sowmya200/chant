@@ -2,6 +2,7 @@ import 'package:chant/loginpage.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chant/chat_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 //import 'package:permission_handler/permission_handler.dart';
 class AddContactPage extends StatefulWidget {
@@ -141,6 +142,7 @@ class _AddContactPageState extends State<AddContactPage> {
                         itemCount: contacts.length,
                         itemBuilder: (BuildContext context, int index) {
                           Contact contact = contacts[index];
+                          checkPhoneNumbers([contact]);
                           return ListTile(
                             title: Text(contact.displayName ?? 'Unknown'),
                             subtitle: Text(
@@ -158,27 +160,31 @@ class _AddContactPageState extends State<AddContactPage> {
                                 : CircleAvatar(
                                     child: Text(contact.initials()),
                                   ),
-                            trailing: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Color.fromARGB(255, 123, 63, 211),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 10),
-                              ),
-                              child: Text(
-                                'Add',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            // Divider(height: 2,),
+                                  
+                            // trailing: 
+                            // ElevatedButton(
+                            //   onPressed: () {
+                            //     // Call checkPhoneNumbers function here passing the list of contacts
+                            //     checkPhoneNumbers([contact]);
+                            //   },
+                            //   style: ElevatedButton.styleFrom(
+                            //     backgroundColor:
+                            //         Color.fromARGB(255, 123, 63, 211),
+                            //     padding: EdgeInsets.symmetric(
+                            //         vertical: 5, horizontal: 10),
+                            //   ),
+                            //   child: Text(
+                            //     'Add',
+                            //     style: TextStyle(color: Colors.white),
+                            //   ),
+                            // ),
                           );
                         },
                         separatorBuilder: (BuildContext context, int index) {
                           return Divider(); // Add a divider between each item
                         },
                       ),
-                    ),
+                    )
                   ]));
             },
           ),
@@ -186,4 +192,106 @@ class _AddContactPageState extends State<AddContactPage> {
       ),
     );
   }
+}
+
+void checkPhoneNumbers(List<Contact> contacts) {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  contacts.forEach((contact) {
+    String? phoneNumber = contact.phones?.first.value;
+    if (phoneNumber != null) {
+      // Extract last 10 digits
+      String last10Digits = phoneNumber.substring(phoneNumber.length - 10);
+
+      // Remove non-numeric characters
+      last10Digits = last10Digits.replaceAll(RegExp(r'[^0-9]'), '');
+
+      if (last10Digits.length >= 10) {
+        // Trim to the last 10 digits
+        last10Digits = last10Digits.substring(last10Digits.length - 10);
+
+        firestore
+            .collection('client')
+            .where('phonenumber', isEqualTo: last10Digits)
+            .get()
+            .then((QuerySnapshot querySnapshot) {
+          if (querySnapshot.docs.isNotEmpty) {
+            print('$last10Digits exists in Firestore');
+          } else {
+            print('$last10Digits does not exist in Firestore');
+          }
+        }).catchError((error) {
+          void checkPhoneNumbers(List<Contact> contacts) {
+            FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+            contacts.forEach((contact) {
+              String? phoneNumber = contact.phones?.first.value;
+              if (phoneNumber != null) {
+                // Extract last 10 digits
+                String last10Digits =
+                    phoneNumber.substring(phoneNumber.length - 10);
+
+                // Remove non-numeric characters
+                last10Digits = last10Digits.replaceAll(RegExp(r'[^0-9]'), '');
+
+                if (last10Digits.length >= 10) {
+                  // Trim to the last 10 digits
+                  last10Digits =
+                      last10Digits.substring(last10Digits.length - 10);
+
+                  firestore
+                      .collection('client')
+                      .where('phonenumber', isEqualTo: last10Digits)
+                      .get()
+                      .then((QuerySnapshot querySnapshot) {
+                    if (querySnapshot.docs.isNotEmpty) {
+                      trailing:
+                      ElevatedButton(
+                        onPressed: () {
+                          // Call checkPhoneNumbers function here passing the list of contacts
+                          checkPhoneNumbers([contact]);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 123, 63, 211),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        ),
+                        child: Text(
+                          'Add',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    } else {
+                      trailing:
+                      ElevatedButton(
+                        onPressed: () {
+                          // Call checkPhoneNumbers function here passing the list of contacts
+                          checkPhoneNumbers([contact]);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 123, 63, 211),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        ),
+                        child: Text(
+                          'Send SMS',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    }
+                  }).catchError((error) {
+                    print('Error querying Firestore: $error');
+                  });
+                } else {
+                  print('Invalid phone number: $phoneNumber');
+                }
+              }
+            });
+          }
+        });
+      } else {
+        print('Invalid phone number: $phoneNumber');
+      }
+    }
+  });
 }

@@ -3,9 +3,10 @@ import 'package:chant/loginpage.dart';
 import 'package:chant/signinpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:chant/LoginVerification.dart';
+import 'package:chant/SigninVerification.dart';
 import 'package:chant/chat_page.dart';
 import 'package:chant/chatconnections/fetchingdata.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginVerification extends StatefulWidget {
   final TextEditingController nameController;
@@ -109,7 +110,7 @@ class _LoginVerificationState extends State<LoginVerification> {
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'PASSWORD',
+                  labelText: 'Password',
                   hintText: 'Enter Your Password',
                   prefixIcon: Icon(
                     Icons.lock,
@@ -133,17 +134,78 @@ class _LoginVerificationState extends State<LoginVerification> {
                     style: TextStyle(
                         color: Color.fromARGB(255, 255, 255, 255),
                         fontSize: 19)),
-                onPressed: () async {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => DocumentListPage(
-                              nameController: widget.nameController,
-                              // passwordController: passwordController,
-                            )),
-                    (route) => false, // Remove all routes below the new page
-                  );
+               onPressed: () async {
+  // Fetch the document from Firestore
+  FirebaseFirestore.instance
+      .collection('client')
+      .doc(widget.nameController.text) // Use the value of nameController as the document ID
+      .get()
+      .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+    // Check if the document exists
+    if (documentSnapshot.exists) {
+      // Get the password field from the document
+      String? password = documentSnapshot.data()!['password']; // Add the cast operation here
+
+      // Compare the fetched password with the value of passwordController
+      if (password == passwordController.text) {
+        // If the passwords match, navigate to the next page
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DocumentListPage(
+              nameController: widget.nameController,
+              // passwordController: passwordController,
+            ),
+          ),
+          (route) => false, // Remove all routes below the new page
+        );
+      } else {
+        // If the passwords don't match, show a password error dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Password Incorrect'),
+              content: Text('The entered password is incorrect.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      // If the document does not exist, show a document not found error dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('User Not Found'),
+            content: Text('The entered username does not exist.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
                 },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }).catchError((error) {
+    // Handle error if the Firestore query fails
+    print("Failed to fetch document: $error");
+  });
+}
+,
+
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
                       Color.fromARGB(255, 90, 15, 200)),
@@ -161,19 +223,38 @@ class _LoginVerificationState extends State<LoginVerification> {
               height: 25,
             ),
 
+            // ///////////////////
+            // Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            //   const Text("Did Not Receive Code?"),
+            //   TextButton(
+            //     onPressed: () {
+            //       // Navigate to signup page
+            //       Navigator.pushAndRemoveUntil(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => const LoginPage()),
+            //         (route) => false, // Remove all routes below the new page
+            //       );
+            //     },
+            //     child: const Text('TryAgain'),
+            //   ),
+            // ]),
+            // SizedBox(
+            //   height: 5,
+            // ),
+
             ///////////////////
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              const Text("Did Not Receive Code?"),
+              const Text("Forget password?"),
               TextButton(
                 onPressed: () {
                   // Navigate to signup page
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                    MaterialPageRoute(builder: (context) => LoginVerification(nameController: widget.nameController)),
                     (route) => false, // Remove all routes below the new page
                   );
                 },
-                child: const Text('TryAgain'),
+                child: const Text('send otp'),
               ),
             ]),
           ]),

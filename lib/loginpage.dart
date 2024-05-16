@@ -3,6 +3,7 @@ import 'package:chant/LoginVerification.dart';
 import 'package:chant/signinpage.dart';
 import 'package:chant/appbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,12 +16,12 @@ class _LoginPageState extends State<LoginPage> {
   String DefaultCountryCode = '+91';
   //final TextEditingController mobileController = TextEditingController();
 
-   final nameController = TextEditingController();
-  
+  final nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     // resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       appBar: MyAppBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -97,29 +98,30 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: 15,
           ),
-        Padding(
-  padding: EdgeInsets.all(15),
-  child: Padding(
-    padding: EdgeInsets.all(8.0),
-    child: TextFormField(
-      //controller: mobileController,
-      controller: nameController,
-    //  obscureText: true,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: 'Username', // Change label to 'Username'
-        hintText: 'Enter username', // Change hint text accordingly
-        prefixIcon: Icon(
-          Icons.person,
-          color: Colors.grey, // Adjust the color of the icon as needed
-        ),
-        contentPadding: EdgeInsets.symmetric(
-          vertical: 20, horizontal: 15), // Increase vertical padding
-      ),
-    ),
-  ),
-),
-
+          Padding(
+            padding: EdgeInsets.all(15),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: TextFormField(
+                //controller: mobileController,
+                controller: nameController,
+                //  obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Username', // Change label to 'Username'
+                  hintText: 'Enter username', // Change hint text accordingly
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color:
+                        Colors.grey, // Adjust the color of the icon as needed
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 15), // Increase vertical padding
+                ),
+              ),
+            ),
+          ),
           SizedBox(
             height: 30,
           ),
@@ -132,36 +134,54 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(
                       color: Color.fromARGB(255, 255, 255, 255), fontSize: 19)),
               onPressed: () async {
-                // await FirebaseAuth.instance.verifyPhoneNumber(
-                //   phoneNumber:
-                //       '${DefaultCountryCode + mobileController.text}',
-                //   verificationCompleted: (PhoneAuthCredential credential) {},
-                //   verificationFailed: (FirebaseAuthException e) {},
-                //   codeSent: (String verificationId, int? resendToken) {},
-                //   codeAutoRetrievalTimeout: (String verificationId) {
-                //     //Navigator.push(
-                //     Navigator.pushAndRemoveUntil(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => LoginVerification(
-                //                 mobileNumber:"+918220240433",
-                //                   //  '$DefaultCountryCode${mobileController.text}',
-                //                 verificationId: verificationId,
-                //               )),
-                //       (route) =>
-                //           false, // Predicate that always returns false, removing all routes below the new page
-                //     );
-                //   },
-                // );
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        LoginVerification(nameController: nameController,),
-                  ),
-                  (route) => false, // Remove all routes below the new page
-                );
+                List<String> documentNames = [];
 
+                // Execute the Firestore query to fetch document names
+                await FirebaseFirestore.instance
+                    .collection('client')
+                    .get()
+                    .then((QuerySnapshot querySnapshot) {
+                  querySnapshot.docs.forEach((doc) {
+                    documentNames
+                        .add(doc.id); // Add document ID (name) to the array
+                  });
+//print('Document Names: $documentNames');
+                  // Check if the nameController.text is inside the array
+                  if (documentNames.contains(nameController.text)) {
+                    // If the controller text is in the array, navigate to the next page
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginVerification(
+                          nameController: nameController,
+                        ),
+                      ),
+                      (route) => false, // Remove all routes below the new page
+                    );
+                  } else {
+                    // If the controller text is not in the array, show a dialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Username Not Found'),
+                          content: Text('The entered username does not exist.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                }).catchError((error) {
+                  // Handle error if the Firestore query fails
+                  print("Failed to fetch document names: $error");
+                });
               },
               style: ButtonStyle(
                 backgroundColor:

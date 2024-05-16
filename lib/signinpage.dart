@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 
 class SignInPage extends StatefulWidget {
   SignInPage({Key? key}) : super(key: key);
@@ -62,7 +63,6 @@ class _SignInPageState extends State<SignInPage> {
   final nameController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +205,11 @@ class _SignInPageState extends State<SignInPage> {
                 padding: EdgeInsets.all(15),
                 child: TextField(
                   controller: phoneNumberController,
-               //   obscureText: true,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(10)
+                  ], // Restrict to 10 characters
+                  keyboardType:
+                      TextInputType.phone, // Set keyboard type to phone
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Phone Number',
@@ -218,6 +222,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                 ),
               ),
+
               SizedBox(
                 height: 15,
               ),
@@ -225,7 +230,7 @@ class _SignInPageState extends State<SignInPage> {
                 padding: EdgeInsets.all(15),
                 child: TextField(
                   controller: passwordController,
-               //   obscureText: true,
+                  //   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Set a Password',
@@ -236,6 +241,19 @@ class _SignInPageState extends State<SignInPage> {
                           Colors.grey, // Adjust the color of the icon as needed
                     ),
                   ),
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(
+                        10), // Set max length of password
+                    FilteringTextInputFormatter.allow(RegExp(
+                        r'^[a-zA-Z0-9@#$%^&+=]*$')), // Allow only certain characters
+                  ],
+                  onEditingComplete: () {
+            // Custom validation logic to check minimum length
+            if (passwordController.text.length < 8) {
+              // Show an alert if password is less than 8 characters
+              _showPasswordLengthAlert(context);
+            }
+          },
                 ),
               ),
 
@@ -262,7 +280,7 @@ class _SignInPageState extends State<SignInPage> {
                       'name': nameController.text,
                       'phonenumber': phoneNumberController.text,
                       'password': passwordController.text,
-                     // 'imageUrl': _imageUrl,
+                      // 'imageUrl': _imageUrl,
                     });
 
                     Navigator.pushAndRemoveUntil(
@@ -320,3 +338,31 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 }
+ void _showPasswordLengthAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Password Length'),
+          content: Text('Password must contain at least 8 characters.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the alert dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _showNotification(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Password entered successfully!'),
+      ),
+    );
+  }
+
+
