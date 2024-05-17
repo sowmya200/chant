@@ -63,6 +63,7 @@ class _SignInPageState extends State<SignInPage> {
   final nameController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
+  final emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -201,6 +202,25 @@ class _SignInPageState extends State<SignInPage> {
               SizedBox(
                 height: 10,
               ),
+                Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: TextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress, // Set keyboard type to email
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Email Address',
+                  hintText: 'example@gmail.com',
+                  prefixIcon: Icon(
+                    Icons.email,
+                    color: Colors.grey, // Adjust the color of the icon as needed
+                  ),
+                ),
+              ),
+            ),
+             SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding: EdgeInsets.all(15),
                 child: TextField(
@@ -226,6 +246,9 @@ class _SignInPageState extends State<SignInPage> {
               SizedBox(
                 height: 15,
               ),
+
+
+              
               Padding(
                 padding: EdgeInsets.all(15),
                 child: TextField(
@@ -280,6 +303,7 @@ class _SignInPageState extends State<SignInPage> {
                       'name': nameController.text,
                       'phonenumber': phoneNumberController.text,
                       'password': passwordController.text,
+                      'email':emailController.text,
                       // 'imageUrl': _imageUrl,
                     });
 
