@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class MessagePage extends StatefulWidget {
   final TextEditingController senderName;
@@ -149,6 +151,7 @@ class _MessagePageState extends State<MessagePage> {
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () {
+                     SmsAutoFill().listenForCode();
                     sendMessage(
                         context, widget.senderName.text, widget.receiverName);
                   },
