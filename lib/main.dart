@@ -3,13 +3,24 @@ import 'package:chant/logopage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:chant/chatconnections/otp_page.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized before calling Firebase.initializeApp()
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseApi().initNotifications();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  final InitializationSettings initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+  await FirebaseApi().initNotifications(); // Initialize Firebase Messaging
+
   runApp(const MyApp());
 }
 

@@ -1,9 +1,10 @@
+import 'package:chant/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 class MessagePage extends StatefulWidget {
@@ -69,6 +70,19 @@ class _MessagePageState extends State<MessagePage> {
           var timeB = b['time'] as Timestamp;
           return timeB.compareTo(timeA);
         });
+        // Check for new messages and show notification
+                    for (var doc in receiverSnapshot.data!.docs) {
+                      var messageData = doc.data() as Map<String, dynamic>;
+                      var time = messageData['time'] as Timestamp;
+                      if (time.toDate().isAfter(DateTime.now()
+                          .subtract(const Duration(seconds: 1)))) {
+                        // Show notification
+                        showNotification(
+                          'New message from ${messageData['sender']}',
+                          messageData['message'],
+                        );
+                      }
+                    }
 
         return ListView.builder(
           reverse: true,
@@ -185,4 +199,24 @@ class _MessagePageState extends State<MessagePage> {
     // Clear the message input field
     _messageController.clear();
   }
+}
+Future<void> showNotification(String title, String body) async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    'message_channel', // Channel ID
+    'Messages', // Channel name
+    channelDescription: 'Channel for message notifications', // Channel description
+    importance: Importance.max,
+    priority: Priority.high,
+    ticker: 'ticker',
+  );
+  const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    title,
+    body,
+    platformChannelSpecifics,
+    payload: 'item x',
+  );
 }
