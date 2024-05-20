@@ -21,44 +21,7 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   //late MyAppBar myAppBar;
-  Uint8List? _image;
-  // String? _imageUrl;
-
-  // void selectImage() async {
-  //   final pickedFile =
-  //       await ImagePicker().pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     try {
-  //       final File imageFile = File(pickedFile.path);
-  //       final Uint8List imageBytes = await imageFile.readAsBytes();
-  //       _imageUrl = await uploadImageToFirebaseStorage(imageFile);
-
-  //       // Save user information including image URL to Firestore
-
-  //       // Update state to reflect the selected image
-  //       setState(() {
-  //         _image = imageBytes;
-  //       });
-  //     } catch (e) {
-  //       print('Error selecting image: $e');
-  //     }
-  //   }
-  // }
-
-  // Future<String> uploadImageToFirebaseStorage(File imageFile) async {
-  //   try {
-  //     String fileName =
-  //         DateTime.now().millisecondsSinceEpoch.toString(); // Unique file name
-  //     Reference storageRef =
-  //         FirebaseStorage.instance.ref().child('images/$fileName.jpg');
-  //     UploadTask uploadTask = storageRef.putFile(imageFile);
-  //     TaskSnapshot taskSnapshot = await uploadTask;
-  //     return await taskSnapshot.ref.getDownloadURL();
-  //   } catch (e) {
-  //     print('Error uploading image to Firebase Storage: $e');
-  //     throw e; // Re-throw the error to handle it in the calling function
-  //   }
-  // }
+ // Uint8List? _image;
 
   final nameController = TextEditingController();
   final phoneNumberController = TextEditingController();
@@ -81,31 +44,6 @@ class _SignInPageState extends State<SignInPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Add your circular avatar here
-              // _image != null
-              //     ? CircleAvatar(
-              //         radius: 50,
-              //         backgroundImage: MemoryImage(_image!),
-              //       )
-              //     : CircleAvatar(
-              //         radius: 50, // Adjust the size of the avatar as needed
-              //         backgroundImage: AssetImage(
-              //             "assets/default profile.jpg"), // Replace with your avatar image
-              //         child: Stack(children: [
-              //           Align(
-              //             alignment: Alignment.bottomRight,
-              //             child: GestureDetector(
-              //               onTap: selectImage,
-              //               child: CircleAvatar(
-              //                 radius: 15,
-              //                 backgroundColor:
-              //                     Color.fromARGB(255, 187, 166, 246),
-              //                 child: Icon(Icons.add),
-              //               ),
-              //             ),
-              //           ),
-              //         ]),
-              //       ),
               SizedBox(
                 height: 70,
               ),
@@ -200,26 +138,28 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 5,
               ),
-                Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: TextField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress, // Set keyboard type to email
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Email Address',
-                  hintText: 'example@gmail.com',
-                  prefixIcon: Icon(
-                    Icons.email,
-                    color: Colors.grey, // Adjust the color of the icon as needed
+              Padding(
+                padding: EdgeInsets.all(15),
+                child: TextField(
+                  controller: emailController,
+                  keyboardType:
+                      TextInputType.emailAddress, // Set keyboard type to email
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Email Address',
+                    hintText: 'example@gmail.com',
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color:
+                          Colors.grey, // Adjust the color of the icon as needed
+                    ),
                   ),
                 ),
               ),
-            ),
-             SizedBox(
-                height: 10,
+              SizedBox(
+                height: 5,
               ),
               Padding(
                 padding: EdgeInsets.all(15),
@@ -242,13 +182,9 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                 ),
               ),
-
               SizedBox(
-                height: 15,
+                height: 5,
               ),
-
-
-              
               Padding(
                 padding: EdgeInsets.all(15),
                 child: TextField(
@@ -271,18 +207,12 @@ class _SignInPageState extends State<SignInPage> {
                         r'^[a-zA-Z0-9@#$%^&+=]*$')), // Allow only certain characters
                   ],
                   onEditingComplete: () {
-            // Custom validation logic to check minimum length
-            if (passwordController.text.length < 8) {
-              // Show an alert if password is less than 8 characters
-              _showPasswordLengthAlert(context);
-            }
-          },
+                    if (passwordController.text.length < 8) {
+                      _showPasswordLengthAlert(context);
+                    }
+                  },
                 ),
               ),
-
-              // SizedBox(
-              //   height: 30,
-              // ),
               SizedBox(
                 height: 30,
               ),
@@ -296,15 +226,13 @@ class _SignInPageState extends State<SignInPage> {
                           color: Color.fromARGB(255, 255, 255, 255),
                           fontSize: 19)),
                   onPressed: () {
-                    CollectionReference collRef =
-                        FirebaseFirestore.instance.collection('client');
+                    CollectionReference collRef = FirebaseFirestore.instance.collection('client');
                     String customDocumentId = nameController.text;
                     collRef.doc(customDocumentId).set({
                       'name': nameController.text,
                       'phonenumber': phoneNumberController.text,
                       'password': passwordController.text,
-                      'email':emailController.text,
-                      // 'imageUrl': _imageUrl,
+                      'email': emailController.text,
                     });
 
                     Navigator.pushAndRemoveUntil(
@@ -336,8 +264,6 @@ class _SignInPageState extends State<SignInPage> {
                     const Text("You Have Account?"),
                     TextButton(
                       onPressed: () {
-                        // Navigate to signup page
-
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -349,10 +275,6 @@ class _SignInPageState extends State<SignInPage> {
                       child: const Text('Login'),
                     ),
                   ]),
-
-              ///////////
-
-              // Add other child content here if needed
             ],
           ), /* add child content here */
         ),
@@ -362,31 +284,24 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 }
- void _showPasswordLengthAlert(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Password Length'),
-          content: Text('Password must contain at least 8 characters.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the alert dialog
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-  void _showNotification(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Password entered successfully!'),
-      ),
-    );
-  }
 
+void _showPasswordLengthAlert(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Password Length'),
+        content: Text('Password must contain at least 8 characters.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the alert dialog
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
 

@@ -1,12 +1,15 @@
+import 'package:chant/loginpage.dart';
 import 'package:chant/logopage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:chant/chatconnections/otp_page.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized before calling Firebase.initializeApp()
   await Firebase.initializeApp();
+  await FirebaseApi().initNotifications();
   runApp(const MyApp());
 }
 
@@ -25,7 +28,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 43, 9, 102)),
         useMaterial3: true,
       ),
-      home: const LogoPage(),
+      //home: const LogoPage(),
+      navigatorKey: navigatorKey,
+      home:const LogoPage()
     );
   }
 }

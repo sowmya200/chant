@@ -22,27 +22,12 @@ class _AddContactPageState extends State<AddContactPage> {
     super.initState();
     getAllContacts();
   }
-
-  // Fetch all contacts from device
   Future<void> getAllContacts() async {
     List<Contact> fetchedContacts =
         (await ContactsService.getContacts()).toList();
     setState(() {
       contacts = fetchedContacts;
     });
-  }
-
-  void updateAvatarInFirestore(String phoneNumber, String avatarUrl) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('clients')
-          .doc(phoneNumber)
-          .update({'avatar': avatarUrl});
-
-      print('Avatar updated in Firestore');
-    } catch (e) {
-      print('Error updating avatar in Firestore: $e');
-    }
   }
 
   // Function to check phone numbers against Firestore
@@ -227,7 +212,6 @@ class _AddContactPageState extends State<AddContactPage> {
     );
   }
 
-  // Custom method to build ListTile for each contact
   Widget buildListTile(Contact contact, String value) {
     return ListTile(
       title: Text(contact.displayName ?? 'Unknown'),

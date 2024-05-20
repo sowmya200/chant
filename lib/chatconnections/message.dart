@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +9,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 class MessagePage extends StatefulWidget {
   final TextEditingController senderName;
   final String receiverName;
+  static const Route = '/message-screen';
 
   MessagePage({required this.senderName, required this.receiverName});
 
