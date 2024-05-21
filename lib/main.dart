@@ -42,6 +42,8 @@ class MyApp extends StatelessWidget {
       //home: const LogoPage(),
       navigatorKey: navigatorKey,
       home:const LogoPage()
+      
     );
   }
 }
+  
