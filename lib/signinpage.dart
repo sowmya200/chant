@@ -1,6 +1,7 @@
 import 'package:chant/chat_page.dart';
 import 'dart:io';
 import 'package:chant/imageConnection.dart';
+import 'package:email_auth/email_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chant/loginpage.dart';
 import 'package:chant/SignInVerification.dart';
@@ -11,6 +12,10 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
+import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class SignInPage extends StatefulWidget {
   SignInPage({Key? key}) : super(key: key);
@@ -21,7 +26,50 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   //late MyAppBar myAppBar;
- // Uint8List? _image;
+  // Uint8List? _image;
+
+  // Future<void> sendOTP(String email) async {
+  //   // Generate a random 6-digit OTP
+  //   String otp = generateOTP();
+
+  //   // Email content with OTP
+  //   String emailContent = 'Your OTP for verification is: $otp';
+
+  //   // Create an SMTP server configuration (using Gmail as an example)
+  //   final smtpServer = gmail('sowmyakumaravel2023@gmail.com', 'Shaune@123');
+
+  //   // Create the SMTP client to send the email
+  //   final smtpClient = SmtpServer(smtpServer as String);
+  //   final email = emailController;
+  //   // Create the email message
+  //   final message = Message()
+  //     ..from = Address('sowmyakumaravel2023@gmail.com', 'chant app')
+  //     ..recipients.add(email)
+  //     ..subject = 'Verification OTP'
+  //     ..text = emailContent;
+
+  //   try {
+  //     // Send the email
+  //     final sendReport = await send(message, smtpClient);
+  //     print('OTP sent to $email: $otp');
+  //     print('Message sent: ${sendReport.toString()}');
+  //   } catch (e) {
+  //     // Handle errors
+  //     print('Error sending OTP: $e');
+  //   }
+  // }
+
+  // String generateOTP() {
+  //   // Generate a random 6-digit OTP
+  //   Random random = Random();
+  //   int otp = random.nextInt(999999 - 100000) +
+  //       100000; // Generates a random number between 100000 and 999999
+  //   return otp.toString();
+  // }
+
+  // void sendOtp() async {
+  //   EmailAuth.sessionName = "test Session";
+  // }
 
   final nameController = TextEditingController();
   final phoneNumberController = TextEditingController();
@@ -226,7 +274,8 @@ class _SignInPageState extends State<SignInPage> {
                           color: Color.fromARGB(255, 255, 255, 255),
                           fontSize: 19)),
                   onPressed: () {
-                    CollectionReference collRef = FirebaseFirestore.instance.collection('client');
+                    CollectionReference collRef =
+                        FirebaseFirestore.instance.collection('client');
                     String customDocumentId = nameController.text;
                     collRef.doc(customDocumentId).set({
                       'name': nameController.text,
@@ -304,4 +353,3 @@ void _showPasswordLengthAlert(BuildContext context) {
     },
   );
 }
-
