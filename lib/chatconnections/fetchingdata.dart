@@ -21,50 +21,50 @@ class DocumentListPage extends StatefulWidget {
 
 class _DocumentListPageState extends State<DocumentListPage> {
   String _searchQuery = '';
-  File? _imageFile;
-  final picker = ImagePicker();
+  // File? _imageFile;
+  // final picker = ImagePicker();
 
-  Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  // Future<void> _pickImage() async {
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _imageFile = File(pickedFile.path);
+  //     });
 
-      // Upload image to Firebase Cloud Storage
-      await _uploadImage();
-    }
-  }
+  //     // Upload image to Firebase Cloud Storage
+  //     await _uploadImage();
+  //   }
+  // }
 
-  Future<void> _uploadImage() async {
-    if (_imageFile == null) return;
+  // Future<void> _uploadImage() async {
+  //   if (_imageFile == null) return;
 
-    try {
-      // Upload file to Firebase Cloud Storage
-      String fileName = Path.basename(_imageFile!.path);
-      Reference firebaseStorageRef =
-          FirebaseStorage.instance.ref().child('images/$fileName');
-      UploadTask uploadTask = firebaseStorageRef.putFile(_imageFile!);
-      await uploadTask.whenComplete(() => null);
+  //   try {
+  //     // Upload file to Firebase Cloud Storage
+  //     String fileName = Path.basename(_imageFile!.path);
+  //     Reference firebaseStorageRef =
+  //         FirebaseStorage.instance.ref().child('images/$fileName');
+  //     UploadTask uploadTask = firebaseStorageRef.putFile(_imageFile!);
+  //     await uploadTask.whenComplete(() => null);
 
-      // Get download URL
-      String downloadURL = await firebaseStorageRef.getDownloadURL();
+  //     // Get download URL
+  //     String downloadURL = await firebaseStorageRef.getDownloadURL();
 
-      // Optionally, you can use the downloadURL for further operations (e.g., saving to database)
-      print('Image uploaded to Firebase: $downloadURL');
+  //     // Optionally, you can use the downloadURL for further operations (e.g., saving to database)
+  //     print('Image uploaded to Firebase: $downloadURL');
 
-      // Optionally, you can navigate to another screen or show a success message
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Image uploaded successfully!'),
-      ));
-    } catch (e) {
-      print('Error uploading image to Firebase: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to upload image. Please try again later.'),
-      ));
-    }
-  }
+  //     // Optionally, you can navigate to another screen or show a success message
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('Image uploaded successfully!'),
+  //     ));
+  //   } catch (e) {
+  //     print('Error uploading image to Firebase: $e');
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('Failed to upload image. Please try again later.'),
+  //     ));
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +81,14 @@ class _DocumentListPageState extends State<DocumentListPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.person_add,color: Colors.white,),
-            onPressed:
-             _pickImage,
+            onPressed:(){}
+            //  _pickImage,
              
             
           ),
-           _imageFile != null
-                ? Image.file(_imageFile!)
-                : Text('No image selected'),
+          //  _imageFile != null
+          //       ? Image.file(_imageFile!)
+          //       : Text('No image selected'),
         ],
          
         bottom: PreferredSize(
