@@ -9,12 +9,16 @@ class SignInVerification extends StatefulWidget {
   final TextEditingController phoneNumberController;
   final TextEditingController passwordController;
   final TextEditingController emailController;
+  
+  int otp;
+  //int receivedOtp;
 
   SignInVerification({
     required this.nameController,
     required this.phoneNumberController,
     required this.passwordController,
     required this.emailController,
+    required this.otp,
   });
 
   @override
@@ -22,8 +26,35 @@ class SignInVerification extends StatefulWidget {
 }
 
 class _SignInVerificationState extends State<SignInVerification> {
+  final TextEditingController _controller = TextEditingController();
+  String _result = '';
   // Define any variables or methods needed for the login verification process
-
+  void _checkInput(int otp, TextEditingController controller) {
+    
+    setState(() {
+      if (otp == _controller) {
+        _result = 'Verification successful';
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('otp Incorrect'),
+              content: Text('The entered OTP is incorrect.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,9 +134,11 @@ class _SignInVerificationState extends State<SignInVerification> {
             SizedBox(
               height: 15,
             ),
-            const Padding(
+             Padding(
+              
               padding: EdgeInsets.all(15),
               child: TextField(
+                controller: _controller,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -123,6 +156,7 @@ class _SignInVerificationState extends State<SignInVerification> {
               height: 30,
             ),
             ElevatedButton.icon(
+              
                 icon: const Icon(
                   IconData(0xe3b2, fontFamily: 'MaterialIcons'),
                   color: Color.fromARGB(255, 255, 255,
@@ -133,6 +167,7 @@ class _SignInVerificationState extends State<SignInVerification> {
                         color: Color.fromARGB(255, 255, 255, 255),
                         fontSize: 19)),
                 onPressed: () {
+                  _checkInput(widget.otp,_controller);
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => AddContactPage()),

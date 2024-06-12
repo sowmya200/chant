@@ -16,7 +16,6 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
-
 import 'package:chant/email auth/emailOtp.dart';
 
 class SignInPage extends StatefulWidget {
@@ -27,47 +26,14 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  //late MyAppBar myAppBar;
-  // Uint8List? _image;
 
-  // Future<void> sendOTP(String email) async {
-  //   // Generate a random 6-digit OTP
-  //   String otp = generateOTP();
-
-  //   // Email content with OTP
-  //   String emailContent = 'Your OTP for verification is: $otp';
-
-  //   // Create an SMTP server configuration (using Gmail as an example)
-  //   final smtpServer = gmail('sowmyakumaravel2023@gmail.com', 'Shaune@123');
-
-  //   // Create the SMTP client to send the email
-  //   final smtpClient = SmtpServer(smtpServer as String);
-  //   final email = emailController;
-  //   // Create the email message
-  //   final message = Message()
-  //     ..from = Address('sowmyakumaravel2023@gmail.com', 'chant app')
-  //     ..recipients.add(email)
-  //     ..subject = 'Verification OTP'
-  //     ..text = emailContent;
-
-  //   try {
-  //     // Send the email
-  //     final sendReport = await send(message, smtpClient);
-  //     print('OTP sent to $email: $otp');
-  //     print('Message sent: ${sendReport.toString()}');
-  //   } catch (e) {
-  //     // Handle errors
-  //     print('Error sending OTP: $e');
-  //   }
-  // }
-
-  // String generateOTP() {
-  //   // Generate a random 6-digit OTP
-  //   Random random = Random();
-  //   int otp = random.nextInt(999999 - 100000) +
-  //       100000; // Generates a random number between 100000 and 999999
-  //   return otp.toString();
-  // }
+  String generateOTP() {
+    // Generate a random 6-digit OTP
+    Random random = Random();
+    int otp = random.nextInt(999999 - 100000) +
+        100000; // Generates a random number between 100000 and 999999
+    return otp.toString();
+  }
 
   // void sendOtp() async {
   //   EmailAuth.sessionName = "test Session";
@@ -79,10 +45,11 @@ class _SignInPageState extends State<SignInPage> {
   final emailController = TextEditingController();
    final EmailSender _emailSender = EmailSender();
 
-   Future<void> _sendEmail() async {
+   Future<String> _sendEmail() async {
     final toEmail = emailController.text;
     final subject = "Otp verification";
-    final body = "Your otp is 1234";
+    final otp=generateOTP();
+    final body = "Your otp is"+otp;
 
     try {
       await _emailSender.sendEmail(toEmail, subject, body);
@@ -98,6 +65,7 @@ class _SignInPageState extends State<SignInPage> {
         SnackBar(content: Text('Failed to send email: $e')),
       );
     }
+    return otp;
   }
 
   @override
@@ -298,7 +266,8 @@ class _SignInPageState extends State<SignInPage> {
                           color: Color.fromARGB(255, 255, 255, 255),
                           fontSize: 19)),
                   onPressed: () {
-                    _sendEmail();
+                    String StringOtp=_sendEmail() as String;
+                    int otp = int.parse(StringOtp);
 
 
                     CollectionReference collRef =
@@ -309,6 +278,7 @@ class _SignInPageState extends State<SignInPage> {
                       'phonenumber': phoneNumberController.text,
                       'password': passwordController.text,
                       'email': emailController.text,
+                      'otp':otp,
                     });
 
                     Navigator.pushAndRemoveUntil(
@@ -319,6 +289,7 @@ class _SignInPageState extends State<SignInPage> {
                                 phoneNumberController: phoneNumberController,
                                 passwordController: passwordController,
                                 emailController: emailController,
+
                               )),
                       (route) => false, // Remove all routes below the new page
                     );
@@ -381,21 +352,3 @@ void _showPasswordLengthAlert(BuildContext context) {
     },
   );
 }
-
-// Future<void> _sendEmail() async {
-//   final toEmail = emailController;
-//   final subject = _subjectController.text;
-//   final body = _bodyController.text;
-
-//   await _emailSender.sendEmail(toEmail, subject, body);
-
-//   // Show a snackbar to indicate email sent
-//   ScaffoldMessenger.of(context).showSnackBar(
-//     SnackBar(content: Text('Email sent successfully to $toEmail')),
-//   );
-
-//   // Clear the text fields
-//   _toController.clear();
-//   _subjectController.clear();
-//   _bodyController.clear();
-// }
