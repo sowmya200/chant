@@ -17,6 +17,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
+import 'package:chant/email auth/emailOtp.dart';
+
 class SignInPage extends StatefulWidget {
   SignInPage({Key? key}) : super(key: key);
 
@@ -75,6 +77,28 @@ class _SignInPageState extends State<SignInPage> {
   final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
+   final EmailSender _emailSender = EmailSender();
+
+   Future<void> _sendEmail() async {
+    final toEmail = emailController.text;
+    final subject = "Otp verification";
+    final body = "Your otp is 1234";
+
+    try {
+      await _emailSender.sendEmail(toEmail, subject, body);
+
+      // Show a snackbar to indicate email sent
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Email sent successfully to $toEmail')),
+      );
+
+    } catch (e) {
+      // Handle any errors from sending the email
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to send email: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -274,6 +298,9 @@ class _SignInPageState extends State<SignInPage> {
                           color: Color.fromARGB(255, 255, 255, 255),
                           fontSize: 19)),
                   onPressed: () {
+                    _sendEmail();
+
+
                     CollectionReference collRef =
                         FirebaseFirestore.instance.collection('client');
                     String customDocumentId = nameController.text;
@@ -291,6 +318,7 @@ class _SignInPageState extends State<SignInPage> {
                                 nameController: nameController,
                                 phoneNumberController: phoneNumberController,
                                 passwordController: passwordController,
+                                emailController: emailController,
                               )),
                       (route) => false, // Remove all routes below the new page
                     );
@@ -353,3 +381,21 @@ void _showPasswordLengthAlert(BuildContext context) {
     },
   );
 }
+
+// Future<void> _sendEmail() async {
+//   final toEmail = emailController;
+//   final subject = _subjectController.text;
+//   final body = _bodyController.text;
+
+//   await _emailSender.sendEmail(toEmail, subject, body);
+
+//   // Show a snackbar to indicate email sent
+//   ScaffoldMessenger.of(context).showSnackBar(
+//     SnackBar(content: Text('Email sent successfully to $toEmail')),
+//   );
+
+//   // Clear the text fields
+//   _toController.clear();
+//   _subjectController.clear();
+//   _bodyController.clear();
+// }
