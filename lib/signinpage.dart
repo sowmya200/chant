@@ -46,25 +46,41 @@ class _SignInPageState extends State<SignInPage> {
    final EmailSender _emailSender = EmailSender();
 
    Future<String> _sendEmail() async {
-    final toEmail = emailController.text;
-    final subject = "Otp verification";
-    final otp=generateOTP();
-    final body = "Your otp is"+otp;
+  final toEmail = emailController.text;
+  final subject = "Otp verification";
+  final otp = generateOTP();
+  final body = "Your otp is " + otp;
 
-    try {
-      await _emailSender.sendEmail(toEmail, subject, body);
+  try {
+    await _emailSender.sendEmail(toEmail, subject, body);
+    
+    // Navigate to SignInVerification screen
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SignInVerification(
+          nameController: nameController,
+          phoneNumberController: phoneNumberController,
+          passwordController: passwordController,
+          emailController: emailController,
+          otp: otp.hashCode,
+        ),
+      ),
+      (route) => false, // Remove all routes below the new page
+    );
 
-      // Show a snackbar to indicate email sent
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Email sent successfully to $toEmail')),
-      );
+    // Show a snackbar to indicate email sent
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Email sent successfully to $toEmail')),
+    );
+  } catch (e) {
+    // Handle any errors from sending the email
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to send email: $e')),
+    );
+  }
 
-    } catch (e) {
-      // Handle any errors from sending the email
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to send email: $e')),
-      );
-    }
+
     return otp;
   }
 
@@ -289,6 +305,7 @@ class _SignInPageState extends State<SignInPage> {
                                 phoneNumberController: phoneNumberController,
                                 passwordController: passwordController,
                                 emailController: emailController,
+                                otp: otp,
 
                               )),
                       (route) => false, // Remove all routes below the new page

@@ -30,10 +30,15 @@ class _SignInVerificationState extends State<SignInVerification> {
   String _result = '';
   // Define any variables or methods needed for the login verification process
   void _checkInput(int otp, TextEditingController controller) {
-    
+  print(otp + _controller.hashCode);
     setState(() {
       if (otp == _controller) {
         _result = 'Verification successful';
+        Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddContactPage()),
+                    (route) => false, // Remove all routes below the new page
+                  );
       } else {
         showDialog(
           context: context,
@@ -45,6 +50,11 @@ class _SignInVerificationState extends State<SignInVerification> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
+                    Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) =>SignInPage()),
+                    (route) => false, // Remove all routes below the new page
+                  );
                   },
                   child: Text('OK'),
                 ),
@@ -167,12 +177,13 @@ class _SignInVerificationState extends State<SignInVerification> {
                         color: Color.fromARGB(255, 255, 255, 255),
                         fontSize: 19)),
                 onPressed: () {
+                  
                   _checkInput(widget.otp,_controller);
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddContactPage()),
-                    (route) => false, // Remove all routes below the new page
-                  );
+                  // Navigator.pushAndRemoveUntil(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => AddContactPage()),
+                  //   (route) => false, // Remove all routes below the new page
+                  // );
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
